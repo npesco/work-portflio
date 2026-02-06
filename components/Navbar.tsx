@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -56,6 +57,7 @@ export default function Navbar() {
           >
             Resume
           </a>
+          <ThemeToggle />
         </div>
 
         {/* Mobile Menu Button */}
@@ -109,6 +111,7 @@ export default function Navbar() {
           >
             Resume
           </a>
+          <ThemeToggle />
         </div>
       </div>
     </nav>
