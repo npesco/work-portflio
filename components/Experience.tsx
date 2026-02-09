@@ -69,11 +69,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section
-      id="experience"
-      ref={sectionRef}
-      className="py-24 md:py-32"
-    >
+    <section id="experience" ref={sectionRef} className="py-24 md:py-32">
       <div className="max-w-5xl mx-auto px-6">
         <div
           className={`transition-all duration-700 ${
@@ -89,7 +85,8 @@ export default function Experience() {
               My Professional Journey
             </h2>
             <p className="text-muted max-w-2xl mx-auto">
-              Career milestones and the companies I&apos;ve had the privilege to work with
+              Career milestones and the companies I&apos;ve had the privilege to
+              work with
             </p>
           </div>
 
@@ -113,7 +110,9 @@ export default function Experience() {
                   <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-accent rounded-full transform -translate-x-1/2 md:-translate-x-1/2 border-4 border-background shadow-lg shadow-accent/50 z-10" />
 
                   {/* Date badge - Desktop */}
-                  <div className={`hidden md:flex flex-1 ${index % 2 === 0 ? "justify-end pr-12" : "justify-start pl-12"}`}>
+                  <div
+                    className={`hidden md:flex flex-1 ${index % 2 === 0 ? "justify-end pr-12" : "justify-start pl-12"}`}
+                  >
                     <div className="flex flex-col items-center gap-2">
                       <span className="px-4 py-2 bg-accent/10 text-accent rounded-full text-sm font-semibold border border-accent/20">
                         {exp.period}
@@ -123,7 +122,9 @@ export default function Experience() {
                   </div>
 
                   {/* Content card */}
-                  <div className={`flex-1 ml-8 md:ml-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12"}`}>
+                  <div
+                    className={`flex-1 ml-8 md:ml-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12"}`}
+                  >
                     <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card group">
                       {/* Mobile date badge */}
                       <div className="md:hidden flex items-center gap-3 mb-4">
@@ -143,15 +144,27 @@ export default function Experience() {
                         rel="noopener noreferrer"
                       >
                         @ {exp.company}
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
                         </svg>
                       </a>
 
                       <ul className="mt-4 space-y-3">
                         {exp.description.map((item, i) => (
                           <li key={i} className="flex gap-3 text-muted text-sm">
-                            <span className="text-accent mt-0.5 flex-shrink-0">▸</span>
+                            <span className="text-accent mt-0.5 flex-shrink-0">
+                              ▸
+                            </span>
                             <span>{item}</span>
                           </li>
                         ))}

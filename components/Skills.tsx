@@ -109,7 +109,9 @@ export default function Skills() {
                 }}
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl shadow-lg`}>
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl shadow-lg`}
+                  >
                     {category.icon}
                   </div>
                   <h3 className="text-xl font-bold">{category.title}</h3>

@@ -159,7 +159,11 @@ export default function Projects() {
   });
 
   return (
-    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-section-alt">
+    <section
+      id="projects"
+      ref={sectionRef}
+      className="py-24 md:py-32 bg-section-alt"
+    >
       <div className="max-w-6xl mx-auto px-6">
         <div
           className={`transition-all duration-700 ${
@@ -175,7 +179,8 @@ export default function Projects() {
               A Selection of My Recent Work
             </h2>
             <p className="text-muted max-w-2xl mx-auto">
-              Here are some of the projects I&apos;ve worked on, ranging from full-stack applications to WordPress sites
+              Here are some of the projects I&apos;ve worked on, ranging from
+              full-stack applications to WordPress sites
             </p>
           </div>
 
@@ -207,13 +212,11 @@ export default function Projects() {
                   <span className="text-6xl group-hover:scale-110 transition-transform duration-500">
                     {project.image}
                   </span>
-                  
+
                   {/* Featured Badge */}
                   {project.featured && (
                     <div className="absolute top-4 right-4">
-                      <span className="badge badge-featured">
-                        ⭐ Featured
-                      </span>
+                      <span className="badge badge-featured">⭐ Featured</span>
                     </div>
                   )}
 
@@ -306,8 +309,18 @@ export default function Projects() {
               className="inline-flex items-center gap-2 px-6 py-3 border-2 border-card-border hover:border-accent text-foreground hover:text-accent rounded-xl font-medium transition-all duration-300"
             >
               View More on GitHub
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </a>
           </div>

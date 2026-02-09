@@ -25,8 +25,18 @@ const socialLinks = [
     name: "Email",
     url: "mailto:neilescobar1211@gmail.com",
     icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+        />
       </svg>
     ),
   },
@@ -70,8 +80,8 @@ export default function Contact() {
               Have a Project in Mind?
             </h2>
             <p className="text-muted max-w-2xl mx-auto">
-              I&apos;m always interested in hearing about new projects and opportunities.
-              Drop me a message!
+              I&apos;m always interested in hearing about new projects and
+              opportunities. Drop me a message!
             </p>
           </div>
 
@@ -82,17 +92,28 @@ export default function Contact() {
                 Let&apos;s Work Together
               </h3>
               <p className="text-muted text-lg mb-8 leading-relaxed">
-                I&apos;m always interested in hearing about new projects and opportunities.
-                Whether you need a full-stack developer, a frontend specialist, or a WordPress
-                expert — feel free to reach out!
+                I&apos;m always interested in hearing about new projects and
+                opportunities. Whether you need a full-stack developer, a
+                frontend specialist, or a WordPress expert — feel free to reach
+                out!
               </p>
 
               <a
                 href="mailto:neilescobar1211@gmail.com"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-xl font-medium transition-all duration-300 hover:shadow-xl hover:shadow-accent/25"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
                 Send Me an Email
               </a>
@@ -104,13 +125,28 @@ export default function Contact() {
               <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent flex-shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-1">Email</h4>
-                    <a href="mailto:neilescobar1211@gmail.com" className="text-lg font-medium hover:text-accent transition-colors">
+                    <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-1">
+                      Email
+                    </h4>
+                    <a
+                      href="mailto:neilescobar1211@gmail.com"
+                      className="text-lg font-medium hover:text-accent transition-colors"
+                    >
                       neilescobar1211@gmail.com
                     </a>
                   </div>
@@ -120,13 +156,30 @@ export default function Contact() {
               <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent flex-shrink-0">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-1">Location</h4>
+                    <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-1">
+                      Location
+                    </h4>
                     <p className="text-lg font-medium">Philippines</p>
                   </div>
                 </div>
@@ -134,7 +187,9 @@ export default function Contact() {
 
               {/* Social Links */}
               <div className="bg-card-bg border border-card-border rounded-2xl p-6">
-                <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-4">Connect with me</h4>
+                <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-4">
+                  Connect with me
+                </h4>
                 <div className="flex gap-3">
                   {socialLinks.map((social) => (
                     <a
