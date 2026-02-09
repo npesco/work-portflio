@@ -13,6 +13,7 @@ const projects = [
     github: null,
     live: "https://b-ticket.ph/en",
     featured: true,
+    category: "Full Stack",
   },
   {
     title: "B-Merchant",
@@ -23,6 +24,7 @@ const projects = [
     github: null,
     live: "https://b-merchant.ph/en",
     featured: true,
+    category: "Full Stack",
   },
   // Other Web Projects
   {
@@ -34,6 +36,7 @@ const projects = [
     github: null,
     live: "https://tokyo23fc.jp/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Medishin ACP",
@@ -43,7 +46,8 @@ const projects = [
     technologies: ["WordPress", "PHP", "JavaScript", "CSS"],
     github: null,
     live: "https://medishin-acp.com/",
-    featured: false,
+    featured: true,
+    category: "WordPress",
   },
   {
     title: "Medishin INDIBA",
@@ -54,6 +58,7 @@ const projects = [
     github: null,
     live: "https://medishin-acp.com/indiba",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Kimono Rental Online",
@@ -64,6 +69,7 @@ const projects = [
     github: null,
     live: "https://kimono-rental.online/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Best Trading",
@@ -74,6 +80,7 @@ const projects = [
     github: null,
     live: "https://best-trading.co.jp/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Always Royal",
@@ -84,6 +91,7 @@ const projects = [
     github: null,
     live: "https://www.always-royal.co.jp/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Rinkai South",
@@ -94,6 +102,7 @@ const projects = [
     github: null,
     live: "https://rinkai-south.jp/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "Hareke",
@@ -104,6 +113,7 @@ const projects = [
     github: null,
     live: "https://hareke.com/",
     featured: false,
+    category: "WordPress",
   },
   {
     title: "DRE-CLI",
@@ -114,11 +124,15 @@ const projects = [
     github: null,
     live: "https://dre-cli.com/",
     featured: false,
+    category: "WordPress",
   },
 ];
 
+const filters = ["All", "Full Stack", "WordPress", "Featured"];
+
 export default function Projects() {
   const [isVisible, setIsVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("All");
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -138,191 +152,164 @@ export default function Projects() {
     return () => observer.disconnect();
   }, []);
 
-  const featuredProjects = projects.filter((p) => p.featured);
-  const otherProjects = projects.filter((p) => !p.featured);
+  const filteredProjects = projects.filter((project) => {
+    if (activeFilter === "All") return true;
+    if (activeFilter === "Featured") return project.featured;
+    return project.category === activeFilter;
+  });
 
   return (
-    <section id="projects" ref={sectionRef} className="py-24 md:py-32">
+    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-section-alt">
       <div className="max-w-6xl mx-auto px-6">
         <div
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <h2 className="flex items-center gap-4 text-2xl md:text-3xl font-bold mb-12">
-            <span className="text-accent font-mono text-xl">03.</span>
-            Some Things I&apos;ve Built
-            <span className="h-px bg-card-border flex-1 max-w-xs" />
-          </h2>
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-1.5 bg-accent/10 text-accent rounded-full text-sm font-medium mb-4">
+              Featured Projects
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              A Selection of My Recent Work
+            </h2>
+            <p className="text-muted max-w-2xl mx-auto">
+              Here are some of the projects I&apos;ve worked on, ranging from full-stack applications to WordPress sites
+            </p>
+          </div>
 
-          {/* Featured Projects */}
-          <div className="space-y-16 mb-24">
-            {featuredProjects.map((project, index) => (
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`filter-btn ${activeFilter === filter ? "active" : ""}`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+
+          {/* Projects Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project, index) => (
               <div
                 key={project.title}
-                className={`group relative bg-card-bg border border-card-border rounded-xl overflow-hidden hover-card ${
-                  index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                }`}
+                className="group bg-card-bg border border-card-border rounded-2xl overflow-hidden hover-card flex flex-col"
+                style={{
+                  animationDelay: `${index * 50}ms`,
+                }}
               >
-                <div
-                  className={`flex flex-col lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
-                >
-                  {/* Project Image */}
-                  <div className="lg:w-1/2 relative">
-                    <div className="relative aspect-video lg:aspect-auto lg:h-full bg-gradient-to-br from-accent/20 to-purple-500/20 flex items-center justify-center min-h-[250px]">
-                      <span className="text-8xl group-hover:scale-110 transition-transform duration-300">
-                        {project.image}
+                {/* Project Image/Icon Area */}
+                <div className="relative h-48 bg-gradient-to-br from-accent/10 to-purple-500/10 flex items-center justify-center overflow-hidden">
+                  <span className="text-6xl group-hover:scale-110 transition-transform duration-500">
+                    {project.image}
+                  </span>
+                  
+                  {/* Featured Badge */}
+                  {project.featured && (
+                    <div className="absolute top-4 right-4">
+                      <span className="badge badge-featured">
+                        ⭐ Featured
                       </span>
-                      <div className="absolute inset-0 bg-accent/10 group-hover:bg-transparent transition-all duration-300" />
                     </div>
+                  )}
+
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-background/80 backdrop-blur-sm text-xs font-medium rounded-full border border-card-border">
+                      {project.category}
+                    </span>
                   </div>
 
-                  {/* Project Content */}
-                  <div className="lg:w-1/2 p-6 lg:p-8 flex flex-col justify-center">
-                    <p className="text-accent font-mono text-sm mb-2">
-                      Featured Project
-                    </p>
-                    <h3 className="text-2xl font-bold mb-4 group-hover:text-accent transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-muted mb-6 leading-relaxed">
-                      {project.description}
-                    </p>
-                    <ul className="flex flex-wrap gap-2 mb-6">
-                      {project.technologies.map((tech) => (
-                        <li
-                          key={tech}
-                          className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-mono"
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-all duration-300" />
+                </div>
+
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted text-sm leading-relaxed mb-4 flex-grow">
+                    {project.description}
+                  </p>
+
+                  {/* Technologies */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.technologies.slice(0, 4).map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2.5 py-1 bg-accent/10 text-accent text-xs font-medium rounded-md"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-4 pt-4 border-t border-card-border">
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm font-medium text-accent hover:underline"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          {tech}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex gap-4">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-muted hover:text-accent transition-colors"
-                          aria-label="GitHub"
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                        Visit Site
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-muted hover:text-accent transition-colors"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                          </svg>
-                          <span className="text-sm">Code</span>
-                        </a>
-                      )}
-                      {project.live && (
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-muted hover:text-accent transition-colors"
-                          aria-label="Live Demo"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                          <span className="text-sm">Live Demo</span>
-                        </a>
-                      )}
-                    </div>
+                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                        </svg>
+                        Code
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Other Projects */}
-          <div>
-            <h3 className="text-xl font-bold text-center mb-8">
-              Other Noteworthy Projects
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherProjects.map((project) => (
-                <div
-                  key={project.title}
-                  className="bg-card-bg border border-card-border rounded-xl p-6 hover-card group flex flex-col h-full"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                      <span className="text-2xl">{project.image}</span>
-                    </div>
-                    <div className="flex gap-3">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted hover:text-accent transition-colors p-2 hover:bg-accent/10 rounded-lg"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                          </svg>
-                        </a>
-                      )}
-                      {project.live && (
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted hover:text-accent transition-colors p-2 hover:bg-accent/10 rounded-lg"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                  <h4 className="text-lg font-semibold mb-3 group-hover:text-accent transition-colors">
-                    {project.title}
-                  </h4>
-                  <p className="text-muted text-sm mb-4 flex-grow leading-relaxed">
-                    {project.description}
-                  </p>
-                  <ul className="flex flex-wrap gap-2 mt-auto">
-                    {project.technologies.map((tech) => (
-                      <li
-                        key={tech}
-                        className="text-xs font-mono text-muted bg-card-border/50 px-2 py-1 rounded"
-                      >
-                        {tech}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+          {/* View More Link */}
+          <div className="text-center mt-12">
+            <a
+              href="https://github.com/npesco"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 border-2 border-card-border hover:border-accent text-foreground hover:text-accent rounded-xl font-medium transition-all duration-300"
+            >
+              View More on GitHub
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>

@@ -5,43 +5,50 @@ import { useEffect, useRef, useState } from "react";
 const skillCategories = [
   {
     title: "Frontend",
+    icon: "🎨",
+    color: "from-blue-500 to-cyan-500",
     skills: [
-      { name: "React", level: 95 },
-      { name: "Next.js", level: 90 },
+      { name: "React / Next.js", level: 95 },
       { name: "TypeScript", level: 90 },
       { name: "Tailwind CSS", level: 95 },
-      { name: "HTML/CSS", level: 95 },
-      { name: "WordPress", level: 90 },
+      { name: "HTML / CSS", level: 95 },
+      { name: "JavaScript", level: 92 },
     ],
   },
   {
     title: "Backend",
+    icon: "⚙️",
+    color: "from-green-500 to-emerald-500",
     skills: [
       { name: "Node.js", level: 90 },
-      { name: "Python", level: 85 },
+      { name: "PHP / WordPress", level: 90 },
       { name: "Express.js", level: 85 },
-      { name: "FastAPI", level: 80 },
-      { name: "GraphQL", level: 80 },
+      { name: "REST APIs", level: 90 },
+      { name: "Python", level: 80 },
     ],
   },
   {
-    title: "Database",
+    title: "Database & Tools",
+    icon: "🗄️",
+    color: "from-purple-500 to-pink-500",
     skills: [
+      { name: "MySQL", level: 88 },
       { name: "PostgreSQL", level: 85 },
-      { name: "MongoDB", level: 85 },
-      { name: "Redis", level: 75 },
-      { name: "MySQL", level: 80 },
-      { name: "Prisma", level: 85 },
+      { name: "MongoDB", level: 82 },
+      { name: "Git", level: 95 },
+      { name: "Docker", level: 78 },
     ],
   },
   {
-    title: "DevOps & Tools",
+    title: "Other Skills",
+    icon: "🚀",
+    color: "from-orange-500 to-red-500",
     skills: [
-      { name: "Docker", level: 85 },
-      { name: "AWS", level: 80 },
-      { name: "Git", level: 95 },
-      { name: "CI/CD", level: 80 },
-      { name: "Linux", level: 80 },
+      { name: "Figma", level: 75 },
+      { name: "AWS / Vercel", level: 80 },
+      { name: "CI/CD", level: 78 },
+      { name: "Agile / Scrum", level: 85 },
+      { name: "Problem Solving", level: 90 },
     ],
   },
 ];
@@ -57,7 +64,7 @@ export default function Skills() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.1 },
     );
 
     if (sectionRef.current) {
@@ -71,7 +78,7 @@ export default function Skills() {
     <section
       id="skills"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-card-bg/30"
+      className="py-24 md:py-32 bg-section-alt"
     >
       <div className="max-w-6xl mx-auto px-6">
         <div
@@ -79,43 +86,52 @@ export default function Skills() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <h2 className="flex items-center gap-4 text-2xl md:text-3xl font-bold mb-12">
-            <span className="text-accent font-mono text-xl">04.</span>
-            Skills & Technologies
-            <span className="h-px bg-card-border flex-1 max-w-xs" />
-          </h2>
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-1.5 bg-accent/10 text-accent rounded-full text-sm font-medium mb-4">
+              Skills & Expertise
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Technologies and Tools I Use
+            </h2>
+            <p className="text-muted max-w-2xl mx-auto">
+              I bring ideas to life with modern technologies and best practices
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6">
             {skillCategories.map((category, categoryIndex) => (
               <div
                 key={category.title}
-                className="bg-card-bg border border-card-border rounded-lg p-6"
+                className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card"
                 style={{
-                  animationDelay: `${categoryIndex * 100}ms`,
+                  transitionDelay: `${categoryIndex * 100}ms`,
                 }}
               >
-                <h3 className="text-lg font-semibold mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-accent rounded-full" />
-                  {category.title}
-                </h3>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl shadow-lg`}>
+                    {category.icon}
+                  </div>
+                  <h3 className="text-xl font-bold">{category.title}</h3>
+                </div>
                 <div className="space-y-4">
                   {category.skills.map((skill, skillIndex) => (
                     <div key={skill.name}>
-                      <div className="flex justify-between mb-1">
+                      <div className="flex justify-between mb-2">
                         <span className="text-sm font-medium">
                           {skill.name}
                         </span>
-                        <span className="text-sm text-muted">
+                        <span className="text-sm text-accent font-semibold">
                           {skill.level}%
                         </span>
                       </div>
-                      <div className="h-2 bg-card-border rounded-full overflow-hidden">
+                      <div className="skill-progress">
                         <div
-                          className="h-full bg-gradient-to-r from-accent to-purple-500 rounded-full transition-all duration-1000 ease-out"
+                          className="skill-progress-bar"
                           style={{
                             width: isVisible ? `${skill.level}%` : "0%",
                             transitionDelay: `${
-                              categoryIndex * 100 + skillIndex * 50
+                              categoryIndex * 150 + skillIndex * 80
                             }ms`,
                           }}
                         />
@@ -128,11 +144,11 @@ export default function Skills() {
           </div>
 
           {/* Additional skills as tags */}
-          <div className="mt-12">
-            <h3 className="text-lg font-semibold mb-6 text-center">
-              Other Technologies
+          <div className="mt-16 text-center">
+            <h3 className="text-lg font-semibold mb-6">
+              Other Technologies & Tools
             </h3>
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
               {[
                 "REST APIs",
                 "WebSockets",
@@ -149,15 +165,18 @@ export default function Skills() {
                 "Supabase",
                 "Stripe",
                 "Socket.io",
-                "Zustand",
                 "Redux",
                 "React Query",
-                "PHP",
                 "WooCommerce",
-              ].map((skill) => (
+                "SEO",
+                "Responsive Design",
+              ].map((skill, index) => (
                 <span
                   key={skill}
-                  className="px-4 py-2 bg-card-bg border border-card-border rounded-full text-sm text-muted hover:text-accent hover:border-accent transition-all duration-200"
+                  className="tech-tag cursor-default"
+                  style={{
+                    animationDelay: `${index * 30}ms`,
+                  }}
                 >
                   {skill}
                 </span>
