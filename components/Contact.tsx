@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useParallax } from "./useParallax";
 
 // Matrix Rain Animation Component
 function MatrixRain() {
@@ -63,8 +64,8 @@ function MatrixRain() {
         : "rgba(255, 255, 255, 0.06)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Text color based on theme
-      ctx.fillStyle = isDark ? "#00ff41" : "#006400";
+      // Text color based on theme - using accent purple to match other sections
+      ctx.fillStyle = isDark ? "#818cf8" : "#6366f1";
       ctx.font = `bold ${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
@@ -74,12 +75,12 @@ function MatrixRain() {
 
         // Add stronger glow effect
         ctx.shadowBlur = isDark ? 15 : 8;
-        ctx.shadowColor = isDark ? "#00ff41" : "#228B22";
+        ctx.shadowColor = isDark ? "#818cf8" : "#6366f1";
         ctx.fillText(char, x, y);
 
         // Draw again for brighter effect
         ctx.shadowBlur = isDark ? 25 : 12;
-        ctx.shadowColor = isDark ? "#39ff14" : "#32CD32";
+        ctx.shadowColor = isDark ? "#a5b4fc" : "#818cf8";
         ctx.fillText(char, x, y);
         ctx.shadowBlur = 0;
 
@@ -152,6 +153,7 @@ const socialLinks = [
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const parallax = useParallax(sectionRef, { speed: 0.1, scaleEffect: true });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -176,8 +178,13 @@ export default function Contact() {
       ref={sectionRef}
       className="py-24 md:py-32 relative overflow-hidden"
     >
-      {/* Matrix Background Animation */}
-      <div className="absolute inset-0 z-0">
+      {/* Matrix Background Animation with Parallax */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          transform: `translateY(${parallax.y * 2}px)`,
+        }}
+      >
         <MatrixRain />
         {/* Gradient overlay to ensure readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background/50" />

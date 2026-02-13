@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { NetworkAnimation } from "./BackgroundAnimations";
+import { useParallax } from "./useParallax";
 
 const skillCategories = [
   {
@@ -57,6 +58,7 @@ const skillCategories = [
 export default function Skills() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const parallax = useParallax(sectionRef, { speed: 0.12, scaleEffect: true });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -81,8 +83,13 @@ export default function Skills() {
       ref={sectionRef}
       className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      {/* Network/Circuit Animation */}
-      <div className="absolute inset-0 z-0">
+      {/* Network/Circuit Animation with Parallax */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          transform: `translateY(${parallax.y * 2}px)`,
+        }}
+      >
         <NetworkAnimation />
       </div>
 

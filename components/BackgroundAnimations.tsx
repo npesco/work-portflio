@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 
 // Hook to detect dark mode
 function useDarkMode() {
@@ -22,6 +22,39 @@ function useDarkMode() {
   }, []);
 
   return isDark;
+}
+
+// Hook to track mouse position within a section
+function useMousePosition(containerRef: React.RefObject<HTMLElement | null>) {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0, isActive: false });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      setMousePos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        isActive: true,
+      });
+    };
+
+    const handleMouseLeave = () => {
+      setMousePos((prev) => ({ ...prev, isActive: false }));
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [containerRef]);
+
+  return mousePos;
 }
 
 // Floating Particles Animation
@@ -82,23 +115,45 @@ export function FloatingParticles({
   );
 }
 
-// Floating Geometric Shapes
+// Floating Geometric Shapes with Mouse Interaction
 export function FloatingShapes() {
   const isDark = useDarkMode();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left - rect.width / 2) / rect.width,
+        y: (e.clientY - rect.top - rect.height / 2) / rect.height,
+      });
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    return () => container.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const shapes = [
-    { type: "circle", size: 60, color: "accent" },
-    { type: "square", size: 40, color: "purple" },
-    { type: "triangle", size: 50, color: "pink" },
-    { type: "circle", size: 30, color: "blue" },
-    { type: "square", size: 50, color: "accent" },
-    { type: "circle", size: 45, color: "purple" },
+    { type: "circle", size: 60, color: "accent", parallaxFactor: 30 },
+    { type: "square", size: 40, color: "purple", parallaxFactor: 50 },
+    { type: "triangle", size: 50, color: "pink", parallaxFactor: 20 },
+    { type: "circle", size: 30, color: "blue", parallaxFactor: 40 },
+    { type: "square", size: 50, color: "accent", parallaxFactor: 35 },
+    { type: "circle", size: 45, color: "purple", parallaxFactor: 25 },
   ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 overflow-hidden"
+      style={{ pointerEvents: "auto" }}
+    >
       {shapes.map((shape, i) => {
-        const opacity = isDark ? "0.1" : "0.15";
+        const opacity = isDark ? "0.15" : "0.2";
         const positions = [
           { left: "10%", top: "20%" },
           { left: "85%", top: "15%" },
@@ -115,42 +170,50 @@ export function FloatingShapes() {
           blue: isDark ? "#3b82f6" : "#2563eb",
         };
 
+        // Calculate mouse-based offset for parallax effect
+        const offsetX = mousePos.x * shape.parallaxFactor;
+        const offsetY = mousePos.y * shape.parallaxFactor;
+
         return (
           <div
             key={i}
-            className="absolute animate-float-shape"
+            className="absolute animate-float-shape transition-transform duration-300 ease-out"
             style={{
               ...positions[i],
+              transform: `translate(${offsetX}px, ${offsetY}px)`,
               animationDelay: `${i * 0.8}s`,
               animationDuration: `${8 + i * 2}s`,
             }}
           >
             {shape.type === "circle" && (
               <div
-                className="rounded-full"
+                className="rounded-full transition-all duration-300"
                 style={{
                   width: shape.size,
                   height: shape.size,
                   backgroundColor: colorMap[shape.color],
                   opacity,
                   filter: "blur(1px)",
+                  boxShadow: `0 0 ${20 + Math.abs(offsetX) * 0.5}px ${colorMap[shape.color]}40`,
                 }}
               />
             )}
             {shape.type === "square" && (
               <div
-                className="rotate-45"
+                className="rotate-45 transition-all duration-300"
                 style={{
                   width: shape.size,
                   height: shape.size,
                   backgroundColor: colorMap[shape.color],
                   opacity,
                   filter: "blur(1px)",
+                  boxShadow: `0 0 ${20 + Math.abs(offsetX) * 0.5}px ${colorMap[shape.color]}40`,
                 }}
               />
             )}
             {shape.type === "triangle" && (
               <div
+                className="transition-all duration-300"
                 style={{
                   width: 0,
                   height: 0,
@@ -158,7 +221,7 @@ export function FloatingShapes() {
                   borderRight: `${shape.size / 2}px solid transparent`,
                   borderBottom: `${shape.size}px solid ${colorMap[shape.color]}`,
                   opacity,
-                  filter: "blur(1px)",
+                  filter: `blur(1px) drop-shadow(0 0 ${10 + Math.abs(offsetX) * 0.3}px ${colorMap[shape.color]}60)`,
                 }}
               />
             )}
@@ -169,13 +232,14 @@ export function FloatingShapes() {
   );
 }
 
-// Network/Circuit Animation
+// Network/Circuit Animation with Mouse Interaction
 export function NetworkAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDark = useDarkMode();
   const nodesRef = useRef<{ x: number; y: number; vx: number; vy: number }[]>(
     [],
   );
+  const mouseRef = useRef({ x: 0, y: 0, isActive: false });
   const animationRef = useRef<number>(0);
 
   useEffect(() => {
@@ -184,6 +248,23 @@ export function NetworkAnimation() {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Mouse tracking
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        isActive: true,
+      };
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current.isActive = false;
+    };
+
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
 
     const resizeCanvas = () => {
       const parent = canvas.parentElement;
@@ -212,12 +293,42 @@ export function NetworkAnimation() {
     const lineColor = isDark
       ? "rgba(99, 102, 241, 0.15)"
       : "rgba(79, 70, 229, 0.1)";
+    const mouseLineColor = isDark
+      ? "rgba(139, 92, 246, 0.4)"
+      : "rgba(124, 58, 237, 0.3)";
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Update positions
+      const mouse = mouseRef.current;
+
+      // Update positions with mouse interaction
       nodes.forEach((node) => {
+        // Mouse attraction/repulsion effect
+        if (mouse.isActive) {
+          const dx = mouse.x - node.x;
+          const dy = mouse.y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 200 && distance > 0) {
+            // Gentle attraction towards mouse
+            const force = ((200 - distance) / 200) * 0.02;
+            node.vx += (dx / distance) * force;
+            node.vy += (dy / distance) * force;
+          }
+        }
+
+        // Apply velocity with damping
+        node.vx *= 0.99;
+        node.vy *= 0.99;
+
+        // Ensure minimum movement
+        const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+        if (speed < 0.2) {
+          node.vx += (Math.random() - 0.5) * 0.1;
+          node.vy += (Math.random() - 0.5) * 0.1;
+        }
+
         node.x += node.vx;
         node.y += node.vy;
 
@@ -225,7 +336,7 @@ export function NetworkAnimation() {
         if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
       });
 
-      // Draw connections
+      // Draw connections between nodes
       ctx.strokeStyle = lineColor;
       ctx.lineWidth = 1;
       for (let i = 0; i < nodes.length; i++) {
@@ -243,11 +354,66 @@ export function NetworkAnimation() {
         }
       }
 
+      // Draw connections to mouse cursor
+      if (mouse.isActive) {
+        nodes.forEach((node) => {
+          const dx = mouse.x - node.x;
+          const dy = mouse.y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 180) {
+            const opacity = (1 - distance / 180) * 0.6;
+            ctx.strokeStyle = isDark
+              ? `rgba(139, 92, 246, ${opacity})`
+              : `rgba(124, 58, 237, ${opacity})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        });
+
+        // Draw mouse cursor glow
+        const gradient = ctx.createRadialGradient(
+          mouse.x,
+          mouse.y,
+          0,
+          mouse.x,
+          mouse.y,
+          100,
+        );
+        gradient.addColorStop(
+          0,
+          isDark ? "rgba(139, 92, 246, 0.3)" : "rgba(124, 58, 237, 0.2)",
+        );
+        gradient.addColorStop(1, "transparent");
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 100, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       // Draw nodes
       ctx.fillStyle = nodeColor;
       nodes.forEach((node) => {
+        // Nodes near mouse are bigger and brighter
+        let radius = 3;
+        if (mouse.isActive) {
+          const dx = mouse.x - node.x;
+          const dy = mouse.y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            radius = 3 + (1 - distance / 150) * 4;
+            ctx.fillStyle = isDark
+              ? `rgba(139, 92, 246, ${0.6 + (1 - distance / 150) * 0.4})`
+              : `rgba(124, 58, 237, ${0.5 + (1 - distance / 150) * 0.5})`;
+          } else {
+            ctx.fillStyle = nodeColor;
+          }
+        }
         ctx.beginPath();
-        ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
         ctx.fill();
       });
 
@@ -260,37 +426,62 @@ export function NetworkAnimation() {
     return () => {
       cancelAnimationFrame(animationRef.current);
       window.removeEventListener("resize", resizeCanvas);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [isDark]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full opacity-50 pointer-events-none"
+      className="absolute inset-0 w-full h-full opacity-60"
+      style={{ pointerEvents: "auto" }}
     />
   );
 }
 
-// Floating Code Snippets
+// Floating Code Snippets with Mouse Interaction
 export function FloatingCode() {
   const isDark = useDarkMode();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left - rect.width / 2) / rect.width,
+        y: (e.clientY - rect.top - rect.height / 2) / rect.height,
+      });
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    return () => container.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const codeSnippets = [
-    "const dev = 'Patrick';",
-    "npm run build",
-    "git push origin main",
-    "<Component />",
-    "async/await",
-    "{ ...props }",
-    "export default",
-    "useState()",
-    "interface Props",
-    "return <>...</>;",
+    { code: "const dev = 'Patrick';", parallax: 25 },
+    { code: "npm run build", parallax: 40 },
+    { code: "git push origin main", parallax: 15 },
+    { code: "<Component />", parallax: 35 },
+    { code: "async/await", parallax: 50 },
+    { code: "{ ...props }", parallax: 20 },
+    { code: "export default", parallax: 45 },
+    { code: "useState()", parallax: 30 },
+    { code: "interface Props", parallax: 55 },
+    { code: "return <>...</>;", parallax: 25 },
   ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {codeSnippets.map((code, i) => {
+    <div
+      ref={containerRef}
+      className="absolute inset-0 overflow-hidden"
+      style={{ pointerEvents: "auto" }}
+    >
+      {codeSnippets.map((item, i) => {
         const positions = [
           { left: "5%", top: "15%" },
           { left: "80%", top: "10%" },
@@ -304,19 +495,24 @@ export function FloatingCode() {
           { left: "85%", top: "25%" },
         ];
 
+        const offsetX = mousePos.x * item.parallax;
+        const offsetY = mousePos.y * item.parallax;
+
         return (
           <div
             key={i}
-            className={`absolute font-mono text-xs animate-float-code ${
+            className={`absolute font-mono text-xs animate-float-code transition-all duration-300 ease-out ${
               isDark ? "text-accent/30" : "text-accent/40"
             }`}
             style={{
               ...positions[i],
+              transform: `translate(${offsetX}px, ${offsetY}px)`,
               animationDelay: `${i * 0.7}s`,
               animationDuration: `${12 + i * 1.5}s`,
+              textShadow: `0 0 ${10 + Math.abs(offsetX) * 0.3}px currentColor`,
             }}
           >
-            {code}
+            {item.code}
           </div>
         );
       })}
@@ -324,22 +520,67 @@ export function FloatingCode() {
   );
 }
 
-// Gradient Orbs Animation
+// Gradient Orbs Animation with Mouse Interaction
 export function GradientOrbs() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left - rect.width / 2) / rect.width,
+        y: (e.clientY - rect.top - rect.height / 2) / rect.height,
+      });
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    return () => container.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  const orbs = [
+    {
+      className: "top-1/4 left-1/4",
+      size: "w-96 h-96",
+      color: "bg-accent/10",
+      parallax: 40,
+    },
+    {
+      className: "bottom-1/4 right-1/4",
+      size: "w-80 h-80",
+      color: "bg-purple-500/10",
+      parallax: 60,
+      delay: "1.5s",
+    },
+    {
+      className: "top-1/2 right-1/3",
+      size: "w-72 h-72",
+      color: "bg-pink-500/10",
+      parallax: 30,
+      delay: "3s",
+    },
+  ];
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full animate-pulse-slow"
-        style={{ filter: "blur(100px)" }}
-      />
-      <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full animate-pulse-slow"
-        style={{ animationDelay: "1.5s", filter: "blur(100px)" }}
-      />
-      <div
-        className="absolute top-1/2 right-1/3 w-72 h-72 bg-pink-500/10 rounded-full animate-pulse-slow"
-        style={{ animationDelay: "3s", filter: "blur(100px)" }}
-      />
+    <div
+      ref={containerRef}
+      className="absolute inset-0 overflow-hidden"
+      style={{ pointerEvents: "auto" }}
+    >
+      {orbs.map((orb, i) => (
+        <div
+          key={i}
+          className={`absolute ${orb.className} ${orb.size} ${orb.color} rounded-full animate-pulse-slow transition-transform duration-500 ease-out`}
+          style={{
+            filter: "blur(100px)",
+            animationDelay: orb.delay || "0s",
+            transform: `translate(${mousePos.x * orb.parallax}px, ${mousePos.y * orb.parallax}px)`,
+          }}
+        />
+      ))}
     </div>
   );
 }

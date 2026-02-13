@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FloatingShapes } from "./BackgroundAnimations";
+import { useParallax } from "./useParallax";
 
 const highlights = [
   {
@@ -29,6 +30,7 @@ const highlights = [
 export default function About() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const parallax = useParallax(sectionRef, { speed: 0.15, scaleEffect: true });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,8 +55,15 @@ export default function About() {
       ref={sectionRef}
       className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      {/* Floating Geometric Shapes */}
-      <FloatingShapes />
+      {/* Floating Geometric Shapes with Parallax */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          transform: `translateY(${parallax.y * 2}px)`,
+        }}
+      >
+        <FloatingShapes />
+      </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FloatingParticles } from "./BackgroundAnimations";
+import { ParallaxLayer } from "./useParallax";
 
 const roles = [
   "Full-Stack Developer",
@@ -15,9 +16,17 @@ export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     setMounted(true);
+
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -53,17 +62,23 @@ export default function Hero() {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-purple-500/5 to-pink-500/5" />
 
-      {/* Animated background shapes */}
+      {/* Animated background shapes with parallax */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px] animate-pulse-slow" />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[100px] animate-pulse-slow"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[100px] animate-pulse-slow"
-          style={{ animationDelay: "2s" }}
-        />
+        <ParallaxLayer speed={0.15}>
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[100px] animate-pulse-slow" />
+        </ParallaxLayer>
+        <ParallaxLayer speed={0.25}>
+          <div
+            className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[100px] animate-pulse-slow"
+            style={{ animationDelay: "1s" }}
+          />
+        </ParallaxLayer>
+        <ParallaxLayer speed={0.35}>
+          <div
+            className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[100px] animate-pulse-slow"
+            style={{ animationDelay: "2s" }}
+          />
+        </ParallaxLayer>
       </div>
 
       {/* Floating Particles */}

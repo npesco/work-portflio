@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { GradientOrbs } from "./BackgroundAnimations";
+import { useParallax } from "./useParallax";
 
 const projects = [
   // Featured React/Next.js Projects
@@ -135,6 +136,7 @@ export default function Projects() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const sectionRef = useRef<HTMLElement>(null);
+  const parallax = useParallax(sectionRef, { speed: 0.12, scaleEffect: true });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -165,8 +167,15 @@ export default function Projects() {
       ref={sectionRef}
       className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      {/* Gradient Orbs Animation */}
-      <GradientOrbs />
+      {/* Gradient Orbs Animation with Parallax */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          transform: `translateY(${parallax.y * 2}px)`,
+        }}
+      >
+        <GradientOrbs />
+      </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div

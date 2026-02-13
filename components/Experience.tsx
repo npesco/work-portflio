@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { FloatingCode } from "./BackgroundAnimations";
+import { useParallax } from "./useParallax";
 
 const experiences = [
   {
@@ -51,6 +52,7 @@ const experiences = [
 export default function Experience() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const parallax = useParallax(sectionRef, { speed: 0.1, scaleEffect: true });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -75,8 +77,15 @@ export default function Experience() {
       ref={sectionRef}
       className="py-24 md:py-32 relative overflow-hidden"
     >
-      {/* Floating Code Snippets */}
-      <FloatingCode />
+      {/* Floating Code Snippets with Parallax */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          transform: `translateY(${parallax.y * 2}px)`,
+        }}
+      >
+        <FloatingCode />
+      </div>
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div
