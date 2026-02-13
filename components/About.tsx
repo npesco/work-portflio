@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FloatingShapes } from "./BackgroundAnimations";
 
 const highlights = [
   {
@@ -50,9 +51,12 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-section-alt"
+      className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      {/* Floating Geometric Shapes */}
+      <FloatingShapes />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -77,13 +81,13 @@ export default function About() {
             <div className="relative order-2 lg:order-1">
               <div className="relative z-10 max-w-md mx-auto lg:mx-0">
                 {/* Main card */}
-                <div className="bg-card-bg rounded-2xl border border-card-border p-8 shadow-xl">
+                <div className="bg-card-bg rounded-2xl border border-card-border p-8 shadow-xl tilt-3d animated-border">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-4xl shadow-lg">
+                    <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-4xl shadow-lg shine-effect morph-blob">
                       👨‍💻
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold">
+                      <h3 className="text-xl font-bold gradient-text-animated">
                         Neil Patrick Escobar
                       </h3>
                       <p className="text-accent font-medium">
@@ -232,14 +236,19 @@ export default function About() {
           </div>
 
           {/* Highlights */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 stagger-fade-in">
             {highlights.map((item, index) => (
               <div
                 key={item.title}
-                className="bg-card-bg border border-card-border rounded-xl p-6 hover-card"
+                className="bg-card-bg border border-card-border rounded-xl p-6 hover-card tilt-3d gradient-border-hover"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="text-3xl mb-4">{item.icon}</div>
+                <div
+                  className="text-3xl mb-4 bounce-in"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  {item.icon}
+                </div>
                 <h4 className="font-semibold mb-2">{item.title}</h4>
                 <p className="text-sm text-muted">{item.desc}</p>
               </div>

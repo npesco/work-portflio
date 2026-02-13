@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { NetworkAnimation } from "./BackgroundAnimations";
 
 const skillCategories = [
   {
@@ -78,9 +79,14 @@ export default function Skills() {
     <section
       id="skills"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-section-alt"
+      className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      {/* Network/Circuit Animation */}
+      <div className="absolute inset-0 z-0">
+        <NetworkAnimation />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -103,14 +109,14 @@ export default function Skills() {
             {skillCategories.map((category, categoryIndex) => (
               <div
                 key={category.title}
-                className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card"
+                className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card tilt-3d gradient-border-hover"
                 style={{
                   transitionDelay: `${categoryIndex * 100}ms`,
                 }}
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl shadow-lg`}
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center text-2xl shadow-lg shine-effect`}
                   >
                     {category.icon}
                   </div>

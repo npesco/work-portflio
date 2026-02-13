@@ -58,7 +58,7 @@ export default function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 animated-underline ${
                 activeSection === link.href.replace("#", "")
                   ? "text-accent bg-accent/10"
                   : "text-muted hover:text-foreground hover:bg-card-bg"

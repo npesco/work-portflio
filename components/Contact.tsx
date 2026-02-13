@@ -2,6 +2,113 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// Matrix Rain Animation Component
+function MatrixRain() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dropsRef = useRef<number[]>([]);
+  const [isDark, setIsDark] = useState(true);
+
+  // Detect theme changes
+  useEffect(() => {
+    const checkTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Set canvas size
+    const resizeCanvas = () => {
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.offsetWidth;
+        canvas.height = parent.offsetHeight;
+      }
+    };
+    resizeCanvas();
+
+    const fontSize = 14;
+    const columns = Math.floor(canvas.width / fontSize);
+
+    // Initialize drops only once or on resize
+    if (dropsRef.current.length !== columns) {
+      dropsRef.current = Array(columns)
+        .fill(1)
+        .map(() => Math.floor(Math.random() * -50));
+    }
+
+    const drops = dropsRef.current;
+    const chars =
+      "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    const draw = () => {
+      // Semi-transparent background to create fade effect
+      ctx.fillStyle = isDark
+        ? "rgba(0, 0, 0, 0.04)"
+        : "rgba(255, 255, 255, 0.06)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Text color based on theme
+      ctx.fillStyle = isDark ? "#00ff41" : "#006400";
+      ctx.font = `bold ${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        // Add stronger glow effect
+        ctx.shadowBlur = isDark ? 15 : 8;
+        ctx.shadowColor = isDark ? "#00ff41" : "#228B22";
+        ctx.fillText(char, x, y);
+
+        // Draw again for brighter effect
+        ctx.shadowBlur = isDark ? 25 : 12;
+        ctx.shadowColor = isDark ? "#39ff14" : "#32CD32";
+        ctx.fillText(char, x, y);
+        ctx.shadowBlur = 0;
+
+        // Reset drop when it reaches bottom or randomly
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    // Animation loop
+    const interval = setInterval(draw, 50);
+    window.addEventListener("resize", resizeCanvas);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, [isDark]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full opacity-60 dark:opacity-60 pointer-events-none"
+    />
+  );
+}
+
 const socialLinks = [
   {
     name: "GitHub",
@@ -64,8 +171,19 @@ export default function Contact() {
   }, []);
 
   return (
-    <section id="contact" ref={sectionRef} className="py-24 md:py-32">
-      <div className="max-w-6xl mx-auto px-6">
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="py-24 md:py-32 relative overflow-hidden"
+    >
+      {/* Matrix Background Animation */}
+      <div className="absolute inset-0 z-0">
+        <MatrixRain />
+        {/* Gradient overlay to ensure readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background/50" />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -87,8 +205,8 @@ export default function Contact() {
 
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Left side - CTA Card */}
-            <div className="bg-gradient-to-br from-accent/10 to-purple-500/10 rounded-2xl p-8 md:p-10 border border-accent/20">
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+            <div className="bg-gradient-to-br from-accent/10 to-purple-500/10 rounded-2xl p-8 md:p-10 border border-accent/20 tilt-3d animated-border">
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-animated">
                 Let&apos;s Work Together
               </h3>
               <p className="text-muted text-lg mb-8 leading-relaxed">
@@ -100,7 +218,7 @@ export default function Contact() {
 
               <a
                 href="mailto:neilescobar1211@gmail.com"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-xl font-medium transition-all duration-300 hover:shadow-xl hover:shadow-accent/25"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-xl font-medium glow-button shine-effect"
               >
                 <svg
                   className="w-5 h-5"
@@ -122,9 +240,9 @@ export default function Contact() {
             {/* Right side - Contact Info */}
             <div className="space-y-8">
               {/* Contact Cards */}
-              <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card">
+              <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card gradient-border-hover">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent flex-shrink-0">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent shrink-0 shine-effect">
                     <svg
                       className="w-6 h-6"
                       fill="none"
@@ -153,9 +271,9 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card">
+              <div className="bg-card-bg border border-card-border rounded-2xl p-6 hover-card gradient-border-hover">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent flex-shrink-0">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent shrink-0 shine-effect">
                     <svg
                       className="w-6 h-6"
                       fill="none"
@@ -186,23 +304,31 @@ export default function Contact() {
               </div>
 
               {/* Social Links */}
-              <div className="bg-card-bg border border-card-border rounded-2xl p-6">
+              <div className="bg-card-bg border border-card-border rounded-2xl p-6 gradient-border-hover">
                 <h4 className="font-semibold text-sm text-muted uppercase tracking-wider mb-4">
                   Connect with me
                 </h4>
-                <div className="flex gap-3">
-                  {socialLinks.map((social) => (
-                    <a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 bg-accent/10 hover:bg-accent hover:text-white text-accent rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
-                      aria-label={social.name}
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
+                <div className="flex gap-6">
+                  {socialLinks.map((social) => {
+                    const brandClass =
+                      social.name === "GitHub"
+                        ? "social-github"
+                        : social.name === "LinkedIn"
+                          ? "social-linkedin"
+                          : "social-email";
+                    return (
+                      <a
+                        key={social.name}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`social-icon-hover ${brandClass} w-14 h-14 rounded-xl flex items-center justify-center`}
+                        aria-label={social.name}
+                      >
+                        <span className="relative z-10">{social.icon}</span>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>

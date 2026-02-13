@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GradientOrbs } from "./BackgroundAnimations";
 
 const projects = [
   // Featured React/Next.js Projects
@@ -162,9 +163,12 @@ export default function Projects() {
     <section
       id="projects"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-section-alt"
+      className="py-24 md:py-32 bg-section-alt relative overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      {/* Gradient Orbs Animation */}
+      <GradientOrbs />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div
           className={`transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
@@ -202,7 +206,7 @@ export default function Projects() {
             {filteredProjects.map((project, index) => (
               <div
                 key={project.title}
-                className="group bg-card-bg border border-card-border rounded-2xl overflow-hidden hover-card flex flex-col"
+                className="group bg-card-bg border border-card-border rounded-2xl overflow-hidden hover-card flex flex-col tilt-3d gradient-border-hover shine-effect"
                 style={{
                   animationDelay: `${index * 50}ms`,
                 }}

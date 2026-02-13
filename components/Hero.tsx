@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FloatingParticles } from "./BackgroundAnimations";
 
 const roles = [
   "Full-Stack Developer",
@@ -65,6 +66,9 @@ export default function Hero() {
         />
       </div>
 
+      {/* Floating Particles */}
+      <FloatingParticles count={40} color="accent" />
+
       {/* Grid pattern overlay */}
       <div
         className="absolute inset-0 opacity-[0.02]"
@@ -89,7 +93,9 @@ export default function Hero() {
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                <span className="gradient-text">Neil Patrick Escobar</span>
+                <span className="gradient-text-animated">
+                  Neil Patrick Escobar
+                </span>
               </h1>
 
               <div className="h-16 md:h-20 flex items-center justify-center lg:justify-start mb-6">
@@ -108,7 +114,7 @@ export default function Hero() {
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 <a
                   href="#projects"
-                  className="group px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-xl font-medium transition-all duration-300 hover:shadow-xl hover:shadow-accent/25 flex items-center gap-2"
+                  className="group px-8 py-4 bg-accent hover:bg-accent-hover text-white rounded-xl font-medium transition-all duration-300 flex items-center gap-2 glow-button shine-effect"
                 >
                   View My Work
                   <svg
@@ -127,7 +133,7 @@ export default function Hero() {
                 </a>
                 <a
                   href="#contact"
-                  className="px-8 py-4 border-2 border-card-border hover:border-accent text-foreground hover:text-accent rounded-xl font-medium transition-all duration-300"
+                  className="px-8 py-4 border-2 border-card-border text-foreground rounded-xl font-medium outline-btn-hover"
                 >
                   Contact Me
                 </a>
@@ -153,9 +159,12 @@ export default function Hero() {
             {/* Right side - Decorative element */}
             <div className="hidden lg:flex flex-1 justify-center">
               <div className="relative">
-                <div className="w-80 h-80 rounded-full bg-gradient-to-br from-accent/20 to-purple-500/20 flex items-center justify-center animate-float">
-                  <div className="w-64 h-64 rounded-full bg-gradient-to-br from-accent/30 to-purple-500/30 flex items-center justify-center">
-                    <div className="w-48 h-48 rounded-full bg-card-bg border border-card-border flex items-center justify-center shadow-2xl">
+                <div className="w-80 h-80 rounded-full bg-gradient-to-br from-accent/20 to-purple-500/20 flex items-center justify-center animate-float morph-blob">
+                  <div
+                    className="w-64 h-64 rounded-full bg-gradient-to-br from-accent/30 to-purple-500/30 flex items-center justify-center morph-blob"
+                    style={{ animationDelay: "-2s" }}
+                  >
+                    <div className="w-48 h-48 rounded-full bg-card-bg border border-card-border flex items-center justify-center shadow-2xl pulse-ring neon-box">
                       <span className="monogram text-4xl">NPE</span>
                     </div>
                   </div>
